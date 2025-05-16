@@ -1,57 +1,102 @@
-<?php include 'db_connect.php' ?>
-<div class="container-fluid">
-	<form action="" id="login-frm">
-		<div class="form-group">
-			<label for="" class="control-label">Email</label>
-			<input type="email" name="email" required="" class="form-control">
-		</div>
-		<div class="form-group">
-			<label for="" class="control-label">Password</label>
-			<input type="password" name="password" required="" class="form-control">
-			<small><a href="index.php?page=signup" id="new_account">Create New Account</a></small>
-		</div>
-		<span class="float-right">
-			<button class="button btn btn-primary btn-sm">Login/signup</button>
-			<button class="button btn btn-secondary btn-sm" type="button" data-dismiss="modal">Cancel</button>
-		</span>
-	</form>
-</div>
+<?php include 'inc/header.php';?>
+<?php 
+$login = Session::get("cuslogin");
+if ($login == true) {
+	header("Location:order.php");
+}
+ ?>
+
+<?php
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
+    $custLogin = $cmr->customerLogin($_POST);
+}
+
+?> 
+
+ <div class="main">
+    <div class="content">
+    	 <div class="login_panel">
+
+    	 	<?php 
+
+    		if (isset($custLogin)) {
+    			echo $custLogin;
+    		}
+    		 ?>
+        	<h3>Existing Customers</h3>
+        	<p>Sign in with the form below.</p>
+        	<form action="" method="post">
+                	<input name="email" placeholder="Email" type="text"/>
+                    <input name="pass" placeholder="Password" type="password"/>
+                    <div class="buttons"><div><button class="grey" name="login">Sign In</button></div></div>
+                      </div>
+                 </form>
+                 
+                    
+                  
 
 
+<?php
 
-<style>
-	#uni_modal .modal-footer{
-		display: none
-	}
-</style>
-<script>
-	$('#login-frm').submit(function(e){
-		e.preventDefault()
-		start_load()
-		if($(this).find('.alert-danger').length > 0 )
-			$(this).find('.alert-danger').remove();
-		$.ajax({
-			url:'ajax.php?action=login',
-			method:'POST',
-			data:$(this).serialize(),
-			error:err=>{
-				console.log(err)
-		$('#login-form button[type="button"]').removeAttr('disabled').html('Login');
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
+    $customerReg = $cmr->customerRegistration($_POST);
+}
 
-			},
-			success:function(resp){
-				if(resp == 1){
-					location.href ='index.php?page=home';
-				}else{
-					$('#login-frm').prepend('<div class="alert alert-danger">Username or password is incorrect.</div>')
-					end_load()
-				}
-			}
-		})
-	})
-	$('.number').on('input',function(){
-        var val = $(this).val()
-        val = val.replace(/[^0-9 \,]/, '');
-        $(this).val(val)
-    })
-</script>	
+?>          
+    	<div class="register_account">
+    		<?php 
+
+    		if (isset($customerReg)) {
+    			echo $customerReg;
+    		}
+    		 ?>
+    		<h3>Register New Account</h3>
+    		<form action="" method="post">
+		   			 <table>
+		   				<tbody>
+						<tr>
+						<td>
+							<div>
+							<input type="text" name="name" placeholder="Name"/>
+							</div>
+							
+							<div>
+							   <input type="text" name="city" placeholder="City"/>
+							</div>
+							
+							<div>
+								<input type="text" name="zip" placeholder="Zip-Code"/>
+							</div>
+							<div>
+								<input type="text" name="email" placeholder="Email"/>
+							</div>
+		    			 </td>
+		    			<td>
+						<div>
+							<input type="text" name="address" placeholder="Address"/>
+						</div>
+		    		
+						<div>
+							<input type="text" name="country" placeholder="Country"/>
+						</div>
+				 	        
+	
+		           <div>
+		          <input type="text" name="phone" placeholder="Phone"/>
+		          </div>
+				  
+				  <div>
+					<input type="text" name="pass" placeholder="Password"/>
+				</div>
+		    	</td>
+		    </tr> 
+		    </tbody></table> 
+		   <div class="search"><div><button class="grey" name="register">Create Account</button></div></div>
+		    <div class="clear"></div>
+		    </form>
+    	</div>  	
+       <div class="clear"></div>
+    </div>
+ </div>
+<?php include 'inc/footer.php';?>
